@@ -1,0 +1,26 @@
+services:
+  exporter:
+    build: ./exporter
+    container_name: custom_exporter
+    ports:
+      - "8001:8000"
+    networks:
+      - monitor-net
+    restart: unless-stopped
+
+  nginx-test:
+    image: nginx:latest
+    container_name: web_test
+    ports:
+      - "8080:80"
+    networks:
+      - monitor-net
+    depends_on:
+      - exporter
+
+networks:
+  monitor-net:
+    driver: bridge
+
+volumes:
+  prometheus-data:
